@@ -1,11 +1,10 @@
 package com.horizonbank.Horizon.Bank.Controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.bind.annotation.*;
 
 import com.horizonbank.Horizon.Bank.Entities.User;
@@ -15,7 +14,6 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/users")
-
 public class UserControllers {
 
     @Autowired
@@ -31,16 +29,19 @@ public class UserControllers {
         }
     }
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf().disable() // Deshabilita CSRF para simplificar pruebas iniciales
-                .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll() // Permite el acceso a todos los endpoints sin autenticación
-                )
-                .httpBasic().disable(); // Deshabilita la autenticación básica
-
-        return http.build();
+    @GetMapping("/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+        try {
+            User user = userService.getUserById(id);
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
     }
 
+    @GetMapping
+    public ResponseEntity<List<User>> getAllUsers() {
+        List<User> users = userService.getAllUsers();
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
 }
