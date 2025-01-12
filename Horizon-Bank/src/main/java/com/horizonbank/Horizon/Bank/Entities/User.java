@@ -21,26 +21,31 @@ public class User {
     @Column(nullable = false, unique = true)
     private String email;
 
+    @Column(nullable = false, unique = true)
+    private String identityCard;
+
     @Column(nullable = false)
     private String password;
 
     @Column(name = "profile_image")
     private String profileImage;
 
-    @Column(nullable = false)
+    @Column()
     private Boolean isActive;
 
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    public User(String name, String lastName, String email, String password, String profileImage, Boolean isActive) {
+    public User(String name, String lastName, String email, String password, String profileImage, Boolean isActive,
+            String identityCard) {
 
         this.name = name;
         this.lastName = lastName;
         this.email = email;
+        this.identityCard = identityCard;
         this.password = password;
         this.profileImage = profileImage;
         this.isActive = isActive;
@@ -82,6 +87,17 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getIdentityCard() {
+        return identityCard;
+    }
+
+    public void setIdentityCard(String identityCard) {
+        if (identityCard == null || identityCard.trim().isEmpty()) {
+            throw new IllegalArgumentException("La cedula no puede estar vacio");
+        }
+        this.identityCard = identityCard.trim().toUpperCase();
     }
 
     public String getPassword() {
