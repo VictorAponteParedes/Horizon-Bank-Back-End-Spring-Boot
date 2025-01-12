@@ -1,6 +1,8 @@
 package com.horizonbank.Horizon.Bank.Entities;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.persistence.*;
 
@@ -38,6 +40,12 @@ public class User {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Card> cards = new ArrayList<>();
+
+    public User() {
+    }
 
     public User(String name, String lastName, String email, String password, String profileImage, Boolean isActive,
             String identityCard) {
