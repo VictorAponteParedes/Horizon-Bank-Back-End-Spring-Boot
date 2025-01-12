@@ -7,6 +7,9 @@ import org.springframework.stereotype.Service;
 import com.horizonbank.Horizon.Bank.Entities.User;
 import com.horizonbank.Horizon.Bank.Repositories.UserRepository;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 public class UserService {
 
@@ -23,6 +26,19 @@ public class UserService {
         String hashedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(hashedPassword);
         return userRepository.save(user);
+    }
+
+    public User getUserById(Long id) {
+        Optional<User> user = userRepository.findById(id);
+        if (user.isPresent()) {
+            return user.get();
+        } else {
+            throw new IllegalArgumentException("Usuario no encontrado");
+        }
+    }
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
     }
 
 }
